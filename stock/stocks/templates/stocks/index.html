@@ -1,0 +1,80 @@
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    </head>
+    <body>
+        <h1>Add Stock to StockMatic</h1>
+        <input type="text" id="stock_code">
+        <button id="check_stock" >Check stock</button>
+
+        <div id="display_stock">
+
+        </div>
+        <br>
+        <br>
+        <button id="add_stock" disabled="disabled">Add Stock</button>
+        <br>
+        <br>
+        <div id="data_added">
+
+        </div>
+    </body>
+    
+</html>
+
+<script>
+    $(document).ready(function() {
+    // jQuery code goes here
+        console.log('Page loaded, doc is ready!');
+
+        $('#check_stock').click(function(){
+            $('#add_stock').attr("disabled", true);
+            var stock_code = $('#stock_code').val();
+            console.log(stock_code);
+            
+            $.ajax({
+                type:"GET",
+                url:"getStockInfo/"+stock_code,
+                success:function(response){
+                    console.log(response);
+                    var html = "<p>Name:<span id='stock_name'>"+response['name']+"</span></p>"+"<p> Sector:<span id='stock_sector'>"+response['sector']+"</span></p>"+"<p><span Sector:<span id='stock_code2'>"+stock_code+"</span></p>"
+                    $('#display_stock').html(html);
+                    if(!response['present']) $('#add_stock').attr("disabled", false);
+                }
+            });
+        });
+
+        $('#add_stock').click(function(){
+
+            $('#add_stock').attr("disabled", true);
+            var stock_name = $('#stock_name').text();
+            var stock_code = $('#stock_code2').text();
+            var stock_sector = $('#stock_sector').text();
+
+            $.ajax({
+                type:"POST",
+                url:"addStock",
+                data:{
+                    'stock_name': stock_name,
+                    'stock_code': stock_code,
+                    'stock_sector': stock_sector,
+                    'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val()
+                },
+                success:function(response){
+                    $('#data_added').html(response);
+                }
+            });
+
+        });
+        
+    });
+</script>
+
+
+

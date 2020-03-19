@@ -1,0 +1,25 @@
+{% block content %}
+
+    <h1>The sector is {{sector}}</h1>
+    <table>
+        <tr>
+            <th>Date & Time</th>
+            <th>Open</th>
+            <th>High</th>
+            <th>Low</th>
+            <th>Close</th>
+            <th>Volume</th>
+        </tr>
+        {% for d,r in data.iterrows %}
+        <tr>
+            <td>{{d}}</td>
+            <td>{{r.Open}}</td>
+            <td>{{r.High}}</td>
+            <td>{{r.Low}}</td>
+            <td>{{r.Close}}</td>
+            <td>{{r.Volume}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
